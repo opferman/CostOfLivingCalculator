@@ -39,6 +39,8 @@ TAX_ENTRY g_FederalTaxes2019[2][8] = {
 	{ 0, 0, 0.0f }
 } };
 
+/* TODO: Combine to 1 table, add full state name and enumeration on the tax type (Flat, None or Table).  Write single tax decode function and binary sort. */
+
 STATE_TAXES g_FlatStateTaxes[] = {
 {	"CO", .0463f },
 {	"IL", .0495f },

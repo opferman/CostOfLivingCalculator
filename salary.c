@@ -1,12 +1,13 @@
 /*
  *  Average Salary Calculator - Cost Of Living
  *
- *  Coderot - https://www.youtube.com/channel/UCMN9q8DbU0dnllWpVRvn7Cw  
+ *  Checksum Error - https://www.youtube.com/channel/UCMN9q8DbU0dnllWpVRvn7Cw  
  *
  *   Toby Opferman - 2019
  *
  *
  *   Simple program that will calculate for US the average amount of money after considering taxes, rent, etc.
+ *      Quick program in 2 hours, needs revised.
  */
 
 #include <stdio.h>
