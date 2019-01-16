@@ -1,10 +1,10 @@
-TARGETNAME=salary
+TARGETNAME=SalaryCalc
 TARGETPATH=obj
 TARGETTYPE=PROGRAM
 UMTYPE=console
 UMENTRY=main
 
-SOURCES= salary.c taxtables.c
+SOURCES= entry.c salary.c taxtables.c
 
 INCLUDES=$(INCLUDES);..\inc
 
