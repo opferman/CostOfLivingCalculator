@@ -21,26 +21,26 @@
 
 typedef struct _OPTIONAL_PARAMETERS {
     int MonthlyRent;
-	int OtherExpenses;
+    int OtherExpenses;
 
 } OPTIONAL_PARAMETERS, *POPTIONAL_PARAMETERS;
 
 typedef enum _ERROR_TYPE {
-	ErrorInvalidSalary,
-	ErrorInvalidState
+    ErrorInvalidSalary,
+    ErrorInvalidState
 
 } ERROR_TYPE, *PERROR_TYPE;
 
 
 typedef enum _CMD_LINE_PARSE_STATE {
 
-	CmdLneParse_Salary,
-	CmdLneParse_State,
-	CmdLneParse_FilingType,
-	CmdLneParse_MonthlyRent,
-	CmdLneParse_MonthlyExpenses,
-	CmdLneParse_CompleteSuccess,
-	CmdLneParse_CompleteFail
+    CmdLneParse_Salary,
+    CmdLneParse_State,
+    CmdLneParse_FilingType,
+    CmdLneParse_MonthlyRent,
+    CmdLneParse_MonthlyExpenses,
+    CmdLneParse_CompleteSuccess,
+    CmdLneParse_CompleteFail
 
 } CMD_LINE_PARSE_STATE, *PCMD_LINE_PARSE_STATE;
 
@@ -93,94 +93,94 @@ int _cdecl main(int argc, char *argv[])
 *******************************************/
 int SalaryCalculator_ParseCommandLine(PSALARY_CALCULATION_PARAMS pSalaryParams, POPTIONAL_PARAMETERS pOptionalParameters, char **Args, int ArgcCount)
 {
-	CMD_LINE_PARSE_STATE CmdLneState;
-	int ReturnValue;
+    CMD_LINE_PARSE_STATE CmdLneState;
+    int ReturnValue;
 
-	CmdLneState = CmdLneParse_Salary;
+    CmdLneState = CmdLneParse_Salary;
 
-	memset(pSalaryParams, 0, sizeof(SALARY_CALCULATION_PARAMS));
-	memset(pOptionalParameters, 0, sizeof(OPTIONAL_PARAMETERS));
+    memset(pSalaryParams, 0, sizeof(SALARY_CALCULATION_PARAMS));
+    memset(pOptionalParameters, 0, sizeof(OPTIONAL_PARAMETERS));
 
-	while (CmdLneState != CmdLneParse_CompleteSuccess && CmdLneState != CmdLneParse_CompleteFail)
-	{
+    while (CmdLneState != CmdLneParse_CompleteSuccess && CmdLneState != CmdLneParse_CompleteFail)
+    {
 
-		switch (CmdLneState)
-		{
-				case CmdLneParse_Salary:
-					pSalaryParams->Salary = atoi(Args[0]);
-					if (pSalaryParams->Salary <= MIN_SALARY || pSalaryParams->Salary >= MAX_SALARY)
-					{
-						SalaryCalculator_DisplayErrorString(ErrorInvalidSalary);
-						CmdLneState = CmdLneParse_CompleteFail;
-					}
-					else
-					{
-						Args++;
-						ArgcCount--;
-						CmdLneState++;
-					}
-					break;
+        switch (CmdLneState)
+        {
+                case CmdLneParse_Salary:
+                    pSalaryParams->Salary = atoi(Args[0]);
+                    if (pSalaryParams->Salary <= MIN_SALARY || pSalaryParams->Salary >= MAX_SALARY)
+                    {
+                        SalaryCalculator_DisplayErrorString(ErrorInvalidSalary);
+                        CmdLneState = CmdLneParse_CompleteFail;
+                    }
+                    else
+                    {
+                        Args++;
+                        ArgcCount--;
+                        CmdLneState++;
+                    }
+                    break;
 
-				case CmdLneParse_State:
-					if (Salary_QueryStateTaxes(pSalaryParams, Args[0]) == 0)
-					{
-						SalaryCalculator_DisplayErrorString(ErrorInvalidState);
-						CmdLneState = CmdLneParse_CompleteFail;
-					}
-					else
-					{
-						Args++;
-						ArgcCount--;
-						CmdLneState++;
-					}
-					break;
+                case CmdLneParse_State:
+                    if (Salary_QueryStateTaxes(pSalaryParams, Args[0]) == 0)
+                    {
+                        SalaryCalculator_DisplayErrorString(ErrorInvalidState);
+                        CmdLneState = CmdLneParse_CompleteFail;
+                    }
+                    else
+                    {
+                        Args++;
+                        ArgcCount--;
+                        CmdLneState++;
+                    }
+                    break;
 
-				case CmdLneParse_FilingType:
-					if (*Args[0] == 'M')
-					{
-						pSalaryParams->TaxFilingType = TaxFilingMarried;
-					}
-					else
-					{
-						pSalaryParams->TaxFilingType = TaxFilingSingle;
-					}
-					Args++;
-					ArgcCount--;
-					CmdLneState++;
-					break;
+                case CmdLneParse_FilingType:
+                    if (*Args[0] == 'M')
+                    {
+                        pSalaryParams->TaxFilingType = TaxFilingMarried;
+                    }
+                    else
+                    {
+                        pSalaryParams->TaxFilingType = TaxFilingSingle;
+                    }
+                    Args++;
+                    ArgcCount--;
+                    CmdLneState++;
+                    break;
 
-				case CmdLneParse_MonthlyRent:
-					pOptionalParameters->MonthlyRent = atoi(Args[0]);
-					Args++;
-					ArgcCount--;
-					CmdLneState++;
-					break;
+                case CmdLneParse_MonthlyRent:
+                    pOptionalParameters->MonthlyRent = atoi(Args[0]);
+                    Args++;
+                    ArgcCount--;
+                    CmdLneState++;
+                    break;
 
-				case CmdLneParse_MonthlyExpenses:
-					pOptionalParameters->OtherExpenses = atoi(Args[0]);
-					Args++;
-					ArgcCount--;
-					CmdLneState++;
-					break;
+                case CmdLneParse_MonthlyExpenses:
+                    pOptionalParameters->OtherExpenses = atoi(Args[0]);
+                    Args++;
+                    ArgcCount--;
+                    CmdLneState++;
+                    break;
 
-		}
+        }
 
-		if (ArgcCount == 0)
-		{
-			CmdLneState = CmdLneParse_CompleteSuccess;
-		}
-	}
+        if (ArgcCount == 0)
+        {
+            CmdLneState = CmdLneParse_CompleteSuccess;
+        }
+    }
 
-	if (CmdLneState == CmdLneParse_CompleteSuccess)
-	{
-		ReturnValue = 1;
-	}
-	else
-	{
-		ReturnValue = 0;
-	}
+    if (CmdLneState == CmdLneParse_CompleteSuccess)
+    {
+        ReturnValue = 1;
+    }
+    else
+    {
+        ReturnValue = 0;
+    }
 
-	return ReturnValue;
+    return ReturnValue;
 }
 
 
@@ -216,15 +216,15 @@ void SalaryCalculator_DisplayCommandLineText(void)
 *******************************************/
 void SalaryCalculator_DisplayErrorString(ERROR_TYPE ErrorType)
 {
-	switch (ErrorType)
-	{
-		case ErrorInvalidSalary:
-			printf("Error: Salary must be %i > Salary < %i\n", MIN_SALARY, MAX_SALARY);
-			break;
-		case ErrorInvalidState:
-			printf("Error: Invalid state supplied.\n");
-			break;
-	}
+    switch (ErrorType)
+    {
+        case ErrorInvalidSalary:
+            printf("Error: Salary must be %i > Salary < %i\n", MIN_SALARY, MAX_SALARY);
+            break;
+        case ErrorInvalidState:
+            printf("Error: Invalid state supplied.\n");
+            break;
+    }
 
 }
 
@@ -239,43 +239,43 @@ void SalaryCalculator_DisplayErrorString(ERROR_TYPE ErrorType)
 *******************************************/
 void SalaryCalculator_DisplaySalaryResults(PSALARY_CALCULATION_PARAMS pSalaryParams, PSALARY_TAXES pSalaryTaxes, POPTIONAL_PARAMETERS pOptionalParameters)
 {
-	double SalaryCalculation;
-	double SalaryCalculationAfterTaxes;
-	printf("Your salary is %i\n", pSalaryParams->Salary);
-	printf("Federal Taxes: %1.2f\n", pSalaryTaxes->FederalTaxes);
+    double SalaryCalculation;
+    double SalaryCalculationAfterTaxes;
+    printf("Your salary is %i\n", pSalaryParams->Salary);
+    printf("Federal Taxes: %1.2f\n", pSalaryTaxes->FederalTaxes);
 
-	if (pSalaryParams->pStateTaxTable == NULL && pSalaryParams->StateTaxType == StateTaxTable)
-	{
-		printf("%s State Tax Tables are not available.\n", pSalaryParams->pszStateName);
-	}
-	else
-	{
-		printf("%s State Taxes: %1.2f\n", pSalaryParams->pszStateName, pSalaryTaxes->StateTaxes);
-	}
+    if (pSalaryParams->pStateTaxTable == NULL && pSalaryParams->StateTaxType == StateTaxTable)
+    {
+        printf("%s State Tax Tables are not available.\n", pSalaryParams->pszStateName);
+    }
+    else
+    {
+        printf("%s State Taxes: %1.2f\n", pSalaryParams->pszStateName, pSalaryTaxes->StateTaxes);
+    }
 
-	printf("FICA Taxes: %1.2f\n", pSalaryTaxes->Fica);
-	printf("*************************************\n");
+    printf("FICA Taxes: %1.2f\n", pSalaryTaxes->Fica);
+    printf("*************************************\n");
 
-	SalaryCalculation = ((float)pSalaryParams->Salary) - pSalaryTaxes->FederalTaxes - pSalaryTaxes->StateTaxes - pSalaryTaxes->Fica;
-	printf("Left after taxes: %1.2f\n\n", SalaryCalculation);
+    SalaryCalculation = ((float)pSalaryParams->Salary) - pSalaryTaxes->FederalTaxes - pSalaryTaxes->StateTaxes - pSalaryTaxes->Fica;
+    printf("Left after taxes: %1.2f\n\n", SalaryCalculation);
 
-	SalaryCalculationAfterTaxes = SalaryCalculation;
-	if (pOptionalParameters->MonthlyRent)
-	{
-		SalaryCalculationAfterTaxes = SalaryCalculationAfterTaxes - ((float)pOptionalParameters->MonthlyRent*12);
-		printf(" Monthly Rent: %i", pOptionalParameters->MonthlyRent);
-		printf("    Total Yearly: %i\n\n", pOptionalParameters->MonthlyRent * 12);
-	}
+    SalaryCalculationAfterTaxes = SalaryCalculation;
+    if (pOptionalParameters->MonthlyRent)
+    {
+        SalaryCalculationAfterTaxes = SalaryCalculationAfterTaxes - ((float)pOptionalParameters->MonthlyRent*12);
+        printf(" Monthly Rent: %i", pOptionalParameters->MonthlyRent);
+        printf("    Total Yearly: %i\n\n", pOptionalParameters->MonthlyRent * 12);
+    }
 
-	if (pOptionalParameters->OtherExpenses)
-	{
-		SalaryCalculationAfterTaxes = SalaryCalculationAfterTaxes - ((float)pOptionalParameters->OtherExpenses * 12);
-		printf(" Monthly Expenses: %i", pOptionalParameters->OtherExpenses);
-		printf("    Total Yearly: %i\n\n", pOptionalParameters->OtherExpenses * 12);
-	}
+    if (pOptionalParameters->OtherExpenses)
+    {
+        SalaryCalculationAfterTaxes = SalaryCalculationAfterTaxes - ((float)pOptionalParameters->OtherExpenses * 12);
+        printf(" Monthly Expenses: %i", pOptionalParameters->OtherExpenses);
+        printf("    Total Yearly: %i\n\n", pOptionalParameters->OtherExpenses * 12);
+    }
 
-	if (SalaryCalculationAfterTaxes != SalaryCalculation)
-	{
-		printf("  Final left: %1.2f\n", SalaryCalculationAfterTaxes);
-	}
+    if (SalaryCalculationAfterTaxes != SalaryCalculation)
+    {
+        printf("  Final left: %1.2f\n", SalaryCalculationAfterTaxes);
+    }
 }
